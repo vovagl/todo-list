@@ -1,5 +1,6 @@
+import React from "react";
 
-function Header() {
+const Header:React.FC=()=> {
     return (
         <h1>todos</h1>
     )

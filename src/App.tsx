@@ -1,47 +1,53 @@
-import TodoForm from './TodoForm';
-import TodoList from './TodoList';
+import TodoForm from './TodoForm.tsx';
+import TodoList from './TodoList.tsx';
 import { useState } from 'react';
-import Header from './Header';
-import Footer from './Footer';
+import Header from './Header.tsx';
+import Footer from './Footer.tsx';
 import './App.css';
+import React from 'react';
 
-function App() {
-  const [todos, setTodos] = useState('');
-  const [state, setState] = useState('');
-  const [lists, setLists] = useState([]);
+export type ListTodo={
+  id:number;
+  task:string;
+  status:boolean;
+}
 
-  let copiLists = lists;
+const App: React.FC=()=> {
+  const [todos, setTodos] = useState<string>('');
+  const [state, setState] = useState<string>('');
+  const [lists, setLists] = useState<ListTodo[]>([]);
 
-  function formTodo(e) {
+  let copiLists = [...lists];
+
+  const formTodo=(e:React.ChangeEvent<HTMLInputElement>):void=> {
     setTodos(e.target.value)
   }
 
-  function addTodo() {
+  const addTodo=():void=> {
     if (lists) {
       const newItem = {
         id: Math.random(),
         task: todos,
         status: false,
       }
-      //setLists([newItem, ...lists])
       setLists([...lists, newItem])
     }
   }
 
-  function deleteTodo(id) {
+  const deleteTodo=(id:number):void=> {
     setLists(lists.filter((list) => list.id !== id))
   }
 
-  function clearTodo() {
+  const clearTodo=():void=> {
     setLists(lists.filter((list) => list.status === false))
   }
 
-  function toggleTodo(id) {
+  const toggleTodo=(id:number):void=> {
     setLists(lists.map(list => list.id === id ? { ...list, status: !list.status } : { ...list }))
   }
 
-  function enterPress(e) {
-    if (e.key === 'Enter' && todos.length > 0) {
+  const enterPress=(e:React.KeyboardEvent<HTMLInputElement>):void=> {
+    if (e.key === 'Enter' && todos.trim().length > 0) {
       addTodo()
       setTodos('')
     }
@@ -71,13 +77,12 @@ function App() {
     <div className="App">
       <Header />
       <div className="conteiner">
-        <TodoForm onChange={formTodo} onKeyPress={enterPress} todos={todos} />
-        <TodoList todos={todos} state={state} lists={copiLists} deleteTodo={(id) => deleteTodo(id)} toggleTodo={(id) => toggleTodo(id)} />
+        <TodoForm onChange={formTodo} onKeyDown={enterPress} todos={todos} />
+        <TodoList todos={todos} state={state} lists={copiLists} deleteTodo={(id:number) => deleteTodo(id)} toggleTodo={(id:number) => toggleTodo(id)} />
         {lists.length > 0 &&
           <Footer setState={setState} lists={copiLists} clearTodo={() => clearTodo()} active={active} />}
       </div>
     </div>
-
   );
 }
 

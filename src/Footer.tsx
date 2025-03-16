@@ -1,6 +1,14 @@
+import React from "react";
+import {ListTodo} from './App'
 
-function Footer(props) {
+type FooterProps={
+    setState:(state:string)=>void;
+    lists:ListTodo[];
+    clearTodo:()=>void;
+    active:ListTodo[];
+}
 
+const Footer:React.FC<FooterProps>=(props)=> {
 
     return (
 
